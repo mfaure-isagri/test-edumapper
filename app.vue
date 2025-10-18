@@ -84,6 +84,16 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <button 
+                        class="btn btn-black" 
+                        style="margin-top: auto; width: 100%;"
+                        :class="{ 'btn-disabled': !isClassValid }"
+                        :disabled="!isClassValid"
+                        @click="nextStep()"
+                    >
+                        Confirmer
+                    </button>
                 </template>
                 <template v-if="step == 1">
                     <div class="gradient-card">
@@ -110,18 +120,38 @@
                                 {{ classChoice.type }}
                             </span>
                         </div>
-                        <button class="btn btn-white" @click="isDialogOpen = true">Modifier</button>
+                        <button class="btn btn-white" @click="step = 0">Modifier</button>
                     </div>
+
+                    <importFileCard @file-selected="handleFile" />
+
+                    <div class="flex items-center">
+                        <InformationCircleIcon class="w-[1em] h-[1em]"/>
+                        Transmettre ta fiche Avenir permet d'affiner le résultat de tes chances d'admission.
+                    </div>
+                    
+                    <button 
+                        class="btn btn-black" 
+                        style="margin-top: auto; width: 100%;"
+                        @click="nextStep()"
+                    >
+                        Suivant
+                    </button>
+
+                    <a
+                    href="https://www.parcoursup.gouv.fr/faq/thematiques/autres-sujets/fiche-avenir"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-white"
+                    >
+                        Je n'ai pas de fiche Avenir pour cette formation
+                    </a>
+                </template>
+
+                <template v-if="step === 3">
 
                 </template>
 
-                <button 
-                    class="btn btn-black" 
-                    style="margin-top: auto"
-                    :class="{ 'btn-disabled': !isClassValid }"
-                    :disabled="!isClassValid"
-                    @click="nextStep()"
-                >Confirmer</button>
             </div>
         </main>
         
@@ -137,16 +167,20 @@
 
 <script>
 
-import { BuildingOffice2Icon, MapPinIcon, ChevronDownIcon, AcademicCapIcon } from '@heroicons/vue/24/outline'
+import { BuildingOffice2Icon, MapPinIcon, ChevronDownIcon, AcademicCapIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
 import editLyceeModal from './components/editLyceeModal.vue';
 import highschoolCard from './components/highschoolCard.vue';
+import importFileCard from './components/importFileCard.vue';
 
 export default {
     components: {
         BuildingOffice2Icon, 
         MapPinIcon ,
+        AcademicCapIcon,
+        InformationCircleIcon,
         ChevronDownIcon,
         editLyceeModal,
+        importFileCard,
     },
     data() {
         return {
@@ -213,6 +247,9 @@ export default {
             if (this.step <= 1) {
                 this.step += 1
             }
+        },
+        handleFile(file) {
+            console.log('File imported:', file)
         },
         async fetchRandomLycee() {
             this.loading = true
