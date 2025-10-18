@@ -50,6 +50,6 @@ const saveLycee = () => {
 .custom-select {
   @apply w-full border border-gray-300 rounded-md px-3 py-2 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-black;
   max-height: 12rem; /* roughly fits 6 options visually */
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 </style>

@@ -148,8 +148,61 @@
                     </a>
                 </template>
 
-                <template v-if="step === 3">
+                <template v-if="step === 2">
+                    <div class="p-4 rounded-2xl bg-[#EEE8E4] w-full shadow-md flex flex-col items-center gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="flex flex-row items-center text-gray-700 gap-2">
+                                <span class="text-base">EDHEC Business School</span>
+                                <span>|</span>
+                                <MapPinIcon class="w-4 h-4 text-gray-500" />
+                                <span class="text-sm">Roubaix</span>
+                            </div>
+                            <span class="font-bold text-xl text-gray-900 mt-1">International BBA</span>
+                        </div>
+                    </div>
+                    
+                    <div class=" p-4 bg-white rounded-xl p-4 flex flex-col w-full items-center text-center shadow-sm gap-2">
+                        <GradientCircleBolt :value="pourcentage" />
 
+                        <div class="flex flex-row items-center mt-2">
+                            <span class="text-2xl font-bold text-gray-800">{{ pourcentage }}% 
+                                <span class="text-gray-800 text-4xl leading-none mt-1" style="margin-inline: 10px;">·</span>
+                                Très élevé
+                            </span>
+                        </div>
+
+                        <div class="flex justify-center items-center gap-1 mt-2 w-max text-sm">
+                            Fiabilité
+                            <template v-for="i in 5" :key="i">
+                                <StarIcon
+                                    class="w-[0.8rem] h-[0.8rem]"
+                                    :class="{
+                                    'text-gray-800': i <= Math.floor(rating),
+                                    'text-gray-300': i > Math.ceil(rating),
+                                    }"
+                                />
+                                <div
+                                    v-if="i === Math.ceil(rating) && rating % 1 !== 0"
+                                    class="relative -ml-6 w-[0.8rem] h-[0.8rem] overflow-hidden"
+                                >
+                                    <StarIcon class="w-[0.8rem] h-[0.8rem] text-gray-800 absolute left-0 top-0" />
+                                    <div
+                                    class="absolute top-0 right-0 h-full bg-white"
+                                    :style="{ width: `${(1 - (rating % 1)) * 100}%` }"
+                                    ></div>
+                                </div>
+                            </template>
+                        </div>
+
+                        <span class="text-sm text-gray-600 opacity-70 mt-1">Cette estimation est fournie à titre indicatif et ne garantit en aucun cas la décision d'admission de l'établissement</span>
+                        <button 
+                            class="btn btn-black" 
+                            style="margin-top: auto; width: 100%;"
+                            @click="nextStep()"
+                        >
+                            Tester une autre formation
+                        </button>
+                    </div>
                 </template>
 
             </div>
@@ -168,9 +221,11 @@
 <script>
 
 import { BuildingOffice2Icon, MapPinIcon, ChevronDownIcon, AcademicCapIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
+import { StarIcon } from '@heroicons/vue/24/solid';
 import editLyceeModal from './components/editLyceeModal.vue';
 import highschoolCard from './components/highschoolCard.vue';
 import importFileCard from './components/importFileCard.vue';
+import GradientCircleBolt from '~/components/GradientCircleBolt.vue'
 
 export default {
     components: {
@@ -179,11 +234,15 @@ export default {
         AcademicCapIcon,
         InformationCircleIcon,
         ChevronDownIcon,
+        StarIcon,
+        GradientCircleBolt,
         editLyceeModal,
         importFileCard,
     },
     data() {
         return {
+            pourcentage: 91,
+            rating: 4,
             selectedLycee: '',
             allLycees: [],
             location: 'Lille',
@@ -246,6 +305,8 @@ export default {
         nextStep() {
             if (this.step <= 1) {
                 this.step += 1
+            } else {
+                this.step = 0;
             }
         },
         handleFile(file) {
